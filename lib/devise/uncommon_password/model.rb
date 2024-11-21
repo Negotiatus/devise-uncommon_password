@@ -20,7 +20,7 @@ module Devise
       end
 
       included do
-        validate :not_common_password, if: :password_required?
+        validate :not_common_password, if: :will_save_change_to_encrypted_password?
       end
 
       module ClassMethods
@@ -30,7 +30,7 @@ module Devise
       private
 
       def not_common_password
-        if Devise::Models::UncommonPassword.common_passwords.include? password.downcase
+        if Devise::Models::UncommonPassword.common_passwords.include? password&.downcase
           errors.add(:password, :common_password)
         end
       end
